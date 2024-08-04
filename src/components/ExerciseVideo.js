@@ -1,10 +1,20 @@
 import React from "react";
-import { Box, Typography, Stack, Button } from "@mui/material";
+import { Box, Typography, Stack } from "@mui/material";
+import Loader from "./Loader";
 
 const ExerciseVideo = ({ exerciseVideos, name }) => {
-  if (!exerciseVideos.length) {
-    return "Loading...";
+  if (
+    !exerciseVideos ||
+    !Array.isArray(exerciseVideos) ||
+    exerciseVideos.length === 0
+  ) {
+    return <Loader />;
   }
+
+  // if error happen check the above code
+
+  
+  
   return (
     <Box sx={{ marginTop: { lg: "100px", xs: "20px" } }} p="20px">
       <Typography variant="h4" mb="33px">
@@ -20,7 +30,7 @@ const ExerciseVideo = ({ exerciseVideos, name }) => {
         alignItems="center"
         sx={{ flexDirection: { lg: "row" }, gap: { lg: "70px", xs: "0" } }}
       >
-        {exerciseVideos?.slice(0, 6).map((item, index) => (
+        {exerciseVideos?.slice(0, 6)?.map((item, index) => (
           <a
             key={index}
             className="exercise-video"
@@ -28,12 +38,20 @@ const ExerciseVideo = ({ exerciseVideos, name }) => {
             target="_blank"
             rel="noreferrer"
           >
-            <img src={item.video.thumbnails[0].url} alt={item.video.title} />
+            <img
+              style={{ borderTopLeftRadius: "20px" }}
+              src={item.video.thumbnails[0].url}
+              alt={item.video.title}
+            />
             <Box>
-              <Typography variant="h5" color="#000">
+              <Typography
+                sx={{ fontSize: { lg: "28px", xs: "18px" } }}
+                fontWeight={600}
+                color="#000"
+              >
                 {item.video.title}
               </Typography>
-              <Typography variant="h6" color="#000">
+              <Typography fontSize="14px" color="#000">
                 {item.video.channelName}
               </Typography>
             </Box>
