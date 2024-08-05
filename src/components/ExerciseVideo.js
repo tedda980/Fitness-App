@@ -3,13 +3,13 @@ import { Box, Typography, Stack } from "@mui/material";
 import Loader from "./Loader";
 
 const ExerciseVideo = ({ exerciseVideos, name }) => {
-  if (
-    !exerciseVideos ||
-    !Array.isArray(exerciseVideos) ||
-    exerciseVideos.length === 0
-  ) {
-    return <Loader />;
-  }
+  // if (
+  //   !exerciseVideos ||
+  //   !Array.isArray(exerciseVideos) ||
+  //   exerciseVideos.length === 0
+  // ) {
+  //   return <Loader />;
+  // }
 
   // if error happen check the above code
 
@@ -30,7 +30,7 @@ const ExerciseVideo = ({ exerciseVideos, name }) => {
         alignItems="center"
         sx={{ flexDirection: { lg: "row" }, gap: { lg: "70px", xs: "0" } }}
       >
-        {exerciseVideos?.slice(0, 6)?.map((item, index) => (
+        {exerciseVideos?.slice(0, 6).map((item, index) => (
           <a
             key={index}
             className="exercise-video"
