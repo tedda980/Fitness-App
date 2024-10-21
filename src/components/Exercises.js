@@ -26,6 +26,7 @@ const Exercises = ({ exercises, setExercises, bodyPart }) => {
         );
       }
 
+      console.log("Fetched Exercises Data:", exercisesData); // Log the fetched data
       setExercises(exercisesData);
     };
 
@@ -36,17 +37,17 @@ const Exercises = ({ exercises, setExercises, bodyPart }) => {
   const indexOfLastExercise = currentPage * exercisesPerPage;
   const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
 
-  const currentExercises = exercises.slice(
-    indexOfFirstExercise,
-    indexOfLastExercise
-  );
+  // Check if exercises is an array before using slice
+  const currentExercises = Array.isArray(exercises)
+    ? exercises.slice(indexOfFirstExercise, indexOfLastExercise)
+    : [];
 
   const paginate = (event, value) => {
     setCurrentPage(value);
-
     window.scrollTo({ top: 1800, behavior: "smooth" });
   };
 
+  // Fallback UI if there are no current exercises
   if (!currentExercises.length) return <Loader />;
 
   return (

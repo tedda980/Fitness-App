@@ -1,61 +1,110 @@
-import React, { useContext } from "react";
-import { Box, Typography } from "@mui/material";
-import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
-import "react-horizontal-scrolling-menu/dist/styles.css";
+import React, { useRef, useState, useEffect } from "react";
+import { Box, IconButton, Typography } from "@mui/material";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-import BodyPart from "./BodyPart";
-import ExerciseCard from "./ExerciseCard";
-
-import RightArrowIcon from "../assets/icons/right-arrow.png";
-import LeftArrowIcon from "../assets/icons/left-arrow.png";
-
-const LeftArrow = () => {
-  const { scrollPrev } = useContext(VisibilityContext);
-
-  return (
-    <Typography onClick={() => scrollPrev()} className="right-arrow">
-      <img src={LeftArrowIcon} alt="right-arrow" />
-    </Typography>
-  );
-};
-
-const RightArrow = () => {
-  const { scrollNext } = useContext(VisibilityContext);
-
-  return (
-    <Typography onClick={() => scrollNext()} className="left-arrow">
-      <img src={RightArrowIcon} alt="right-arrow" />
-    </Typography>
-  );
-};
-
-const HorizontalScrollbar = ({ data, bodyPart, setBodyPart,isBodyParts }) => {
-  return (
-    <Box
-      sx={{
-        overflowX: "hidden",
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-      }}
+const BodyPart = ({ item, bodyPart, setBodyPart }) => (
+  <Box
+    onClick={() => setBodyPart(item)}
+    sx={{
+      borderTop: item === bodyPart ? "4px solid #FF2625" : "",
+      background: "#fff",
+      borderBottomLeftRadius: "20px",
+      width: "270px",
+      height: "282px",
+      cursor: "pointer",
+      gap: "47px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Typography
+      fontSize="24px"
+      fontWeight="bold"
+      fontFamily="Alegreya"
+      color="#3A1212"
+      textTransform="capitalize"
+      sx={{ textAlign: "center", mt: 2 }}
     >
-      <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
+      {item}
+    </Typography>
+  </Box>
+);
+
+const HorizontalScrollbar = ({ data, bodyPart, setBodyPart }) => {
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const containerRef = useRef(null);
+
+  const scroll = (scrollOffset) => {
+    if (containerRef.current) {
+      containerRef.current.scrollLeft += scrollOffset;
+      setScrollPosition(containerRef.current.scrollLeft);
+    }
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (containerRef.current) {
+        setScrollPosition(containerRef.current.scrollLeft);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <Box sx={{ position: "relative", width: "100%", p: 2 }}>
+      <Box
+        ref={containerRef}
+        sx={{
+          display: "flex",
+          overflowX: "auto",
+          scrollBehavior: "smooth",
+          "&::-webkit-scrollbar": { display: "none" },
+          msOverflowStyle: "none",
+          scrollbarWidth: "none",
+          padding: "20px 0", // Add padding to give space around items
+        }}
+      >
         {data.map((item) => (
-          
-          <Box
-            key={item.id || item}
-            itemID={item.id || item}
-            title={item.id || item}
-            m="0 40px"
-          >
-           {isBodyParts ? <BodyPart
+          <Box key={item.id || item} sx={{ mx: 1 }}>
+            <BodyPart
               item={item}
-              bodyPart={bodyPart}
               setBodyPart={setBodyPart}
-            />:<ExerciseCard exercise = {item}/>}
+              bodyPart={bodyPart}
+            />
           </Box>
         ))}
-      </ScrollMenu>
+      </Box>
+      <IconButton
+        onClick={() => scroll(-300)}
+        sx={{
+          position: "absolute",
+          left: "0",
+          top: "50%",
+          transform: "translateY(-50%)",
+          bgcolor: "background.paper",
+          "&:hover": { bgcolor: "background.paper" },
+        }}
+      >
+        <ArrowBackIosNewIcon />
+      </IconButton>
+      <IconButton
+        onClick={() => scroll(300)}
+        sx={{
+          position: "absolute",
+          right: "0",
+          top: "50%",
+          transform: "translateY(-50%)",
+          bgcolor: "background.paper",
+          "&:hover": { bgcolor: "background.paper" },
+        }}
+      >
+        <ArrowForwardIosIcon />
+      </IconButton>
     </Box>
   );
 };
